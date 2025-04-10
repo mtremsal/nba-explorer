@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+
+{% block title %}{{ player.full_name }} - NBA Explorer{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <h1>{{ player.full_name }}</h1>
+    <p>{{ player.team_name }} - {{ player.position }}</p>
+</section>
+
+<section class="player-details">
+    <div class="card">
+        <h2>Player Information</h2>
+        <table class="data-table">
+            <tr>
+                <th>Height</th>
+                <td>{{ player.height }}</td>
+            </tr>
+            <tr>
+                <th>Weight</th>
+                <td>{{ player.weight }}</td>
+            </tr>
+            <tr>
+                <th>Birth Date</th>
+                <td>{{ player.birthdate }}</td>
+            </tr>
+            <tr>
+                <th>Country</th>
+                <td>{{ player.country }}</td>
+            </tr>
+            <tr>
+                <th>Experience</th>
+                <td>{{ player.season_exp }} years</td>
+            </tr>
+            <tr>
+                <th>Draft</th>
+                <td>{{ player.draft_year }} Round {{ player.draft_round }} Pick {{ player.draft_number }}</td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="card">
+        <h2>Career Statistics</h2>
+        <table class="data-table">
+            <tr>
+                <th>Games Played</th>
+                <td>{{ player.gp }}</td>
+            </tr>
+            <tr>
+                <th>Points Per Game</th>
+                <td>{{ "%.1f"|format(player.pts_pg) if player.pts_pg }}</td>
+            </tr>
+            <tr>
+                <th>Rebounds Per Game</th>
+                <td>{{ "%.1f"|format(player.reb_pg) if player.reb_pg }}</td>
+            </tr>
+            <tr>
+                <th>Assists Per Game</th>
+                <td>{{ "%.1f"|format(player.ast_pg) if player.ast_pg }}</td>
+            </tr>
+            <tr>
+                <th>Minutes Per Game</th>
+                <td>{{ "%.1f"|format(player.min_pg) if player.min_pg }}</td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="actions">
+        <a href="{{ url_for('players') }}" class="cta-button">Back to Players</a>
+    </div>
+</section>
+
+<section class="related-data">
+    <h2>Recent Games</h2>
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Matchup</th>
+                <th>Team</th>
+                <th>MIN</th>
+                <th>PTS</th>
+                <th>REB</th>
+                <th>AST</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for game in recent_games %}
+            <tr>
+                <td>{{ game.game_date.strftime('%Y-%m-%d') }}</td>
+                <td>
+                    <a href="{{ url_for('game_detail', game_id=game.game_id) }}">
+                        {{ game.matchup }}
+                    </a>
+                </td>
+                <td>{{ game.team_abbreviation }}</td>
+                <td>{{ game.min }}</td>
+                <td>{{ game.pts }}</td>
+                <td>{{ game.reb }}</td>
+                <td>{{ game.ast }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+{% endblock %}

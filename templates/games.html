@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block title %}NBA Explorer - Games{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <h1>NBA Games</h1>
+    <p>Browse all NBA games and results</p>
+</section>
+
+<section class="search-filters">
+    <form method="get" action="{{ url_for('games') }}">
+        <input type="date" name="date" value="{{ request.args.get('date', '') }}" max="{{ current_date }}">
+        <select name="team">
+            <option value="">All Teams</option>
+            {% for team in teams %}
+            <option value="{{ team.team_id }}" {% if request.args.get('team') == team.team_id %}selected{% endif %}>
+                {{ team.team_city }} {{ team.team_name }}
+            </option>
+            {% endfor %}
+        </select>
+        <select name="season_type">
+            <option value="">All Game Types</option>
+            <option value="Regular Season" {% if request.args.get('season_type') == 'Regular Season' %}selected{% endif %}>Regular Season</option>
+            <option value="Playoffs" {% if request.args.get('season_type') == 'Playoffs' %}selected{% endif %}>Playoffs</option>
+        </select>
+        <button type="submit" class="cta-button">Filter</button>
+    </form>
+</section>
+
+<section class="games-list">
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Game</th>
+                <th>Score</th>
+                <th>Type</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for game in games %}
+            <tr>
+                <td>{{ game.game_date }}</td>
+                <td>
+                    <a href="{{ url_for('game_detail', game_id=game.game_id) }}">
+                        {{ game.team_name_home }} vs {{ game.team_name_away }}
+                    </a>
+                </td>
+                <td>{{ game.pts_home }} - {{ game.pts_away }}</td>
+                <td>{{ game.season_type }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+{% endblock %}

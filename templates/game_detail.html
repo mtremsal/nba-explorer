@@ -1,0 +1,147 @@
+{% extends "base.html" %}
+
+{% block title %}{{ game.team_name_home }} vs {{ game.team_name_away }} - NBA Explorer{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <h1>{{ game.team_name_home }} vs {{ game.team_name_away }}</h1>
+    <p>{{ game.game_date.strftime('%B %d, %Y') }} - {{ game.season_type }}</p>
+</section>
+
+<section class="game-details">
+    <div class="card">
+        <h2>Final Score</h2>
+        <div class="score-display">
+            <div class="team home {% if game.pts_home > game.pts_away %}winner{% endif %}">
+                <h3>{{ game.team_name_home }}</h3>
+                <div class="score">{{ game.pts_home }}</div>
+                <div class="record">({{ game.wl_home }})</div>
+            </div>
+            <div class="team away {% if game.pts_away > game.pts_home %}winner{% endif %}">
+                <h3>{{ game.team_name_away }}</h3>
+                <div class="score">{{ game.pts_away }}</div>
+                <div class="record">({{ game.wl_away }})</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>Team Statistics</h2>
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Statistic</th>
+                    <th>{{ game.team_name_home }}</th>
+                    <th>{{ game.team_name_away }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Field Goals</td>
+                    <td>{{ game.fgm_home }}-{{ game.fga_home }} ({{ "%.1f"|format(game.fg_pct_home * 100) }}%)</td>
+                    <td>{{ game.fgm_away }}-{{ game.fga_away }} ({{ "%.1f"|format(game.fg_pct_away * 100) }}%)</td>
+                </tr>
+                <tr>
+                    <td>3-Point Field Goals</td>
+                    <td>{{ game.fg3m_home }}-{{ game.fg3a_home }} ({{ "%.1f"|format(game.fg3_pct_home * 100) }}%)</td>
+                    <td>{{ game.fg3m_away }}-{{ game.fg3a_away }} ({{ "%.1f"|format(game.fg3_pct_away * 100) }}%)</td>
+                </tr>
+                <tr>
+                    <td>Free Throws</td>
+                    <td>{{ game.ftm_home }}-{{ game.fta_home }} ({{ "%.1f"|format(game.ft_pct_home * 100) }}%)</td>
+                    <td>{{ game.ftm_away }}-{{ game.fta_away }} ({{ "%.1f"|format(game.ft_pct_away * 100) }}%)</td>
+                </tr>
+                <tr>
+                    <td>Rebounds</td>
+                    <td>{{ game.reb_home }} ({{ game.oreb_home }} OFF)</td>
+                    <td>{{ game.reb_away }} ({{ game.oreb_away }} OFF)</td>
+                </tr>
+                <tr>
+                    <td>Assists</td>
+                    <td>{{ game.ast_home }}</td>
+                    <td>{{ game.ast_away }}</td>
+                </tr>
+                <tr>
+                    <td>Steals</td>
+                    <td>{{ game.stl_home }}</td>
+                    <td>{{ game.stl_away }}</td>
+                </tr>
+                <tr>
+                    <td>Blocks</td>
+                    <td>{{ game.blk_home }}</td>
+                    <td>{{ game.blk_away }}</td>
+                </tr>
+                <tr>
+                    <td>Turnovers</td>
+                    <td>{{ game.tov_home }}</td>
+                    <td>{{ game.tov_away }}</td>
+                </tr>
+                <tr>
+                    <td>Personal Fouls</td>
+                    <td>{{ game.pf_home }}</td>
+                    <td>{{ game.pf_away }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    {% if game.video_available_home or game.video_available_away %}
+    <div class="card">
+        <h2>Additional Information</h2>
+        <p>Video highlights available for this game</p>
+    </div>
+    {% endif %}
+
+    <div class="actions">
+        <a href="{{ url_for('games') }}" class="cta-button">Back to Games</a>
+    </div>
+</section>
+
+<section class="related-data">
+    <h2>Player Statistics</h2>
+    <div class="tabs">
+        <div class="tab-headers">
+            <h3>{{ game.team_name_home }}</h3>
+            <h3>{{ game.team_name_away }}</h3>
+        </div>
+        <div class="tab-content">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Player</th>
+                        <th>MIN</th>
+                        <th>PTS</th>
+                        <th>REB</th>
+                        <th>AST</th>
+                        <th>STL</th>
+                        <th>BLK</th>
+                        <th>TO</th>
+                        <th>PF</th>
+                        <th>+/-</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for stat in player_stats %}
+                    <tr>
+                        <td>
+                            <a href="{{ url_for('player_detail', player_id=stat.player_id) }}">
+                                {{ stat.player_name }}
+                            </a>
+                        </td>
+                        <td>{{ stat.min }}</td>
+                        <td>{{ stat.pts }}</td>
+                        <td>{{ stat.reb }}</td>
+                        <td>{{ stat.ast }}</td>
+                        <td>{{ stat.stl }}</td>
+                        <td>{{ stat.blk }}</td>
+                        <td>{{ stat.to }}</td>
+                        <td>{{ stat.pf }}</td>
+                        <td>{{ stat.plus_minus }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}NBA Explorer - Teams{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <h1>NBA Teams</h1>
+    <p>Browse all NBA teams and their information</p>
+</section>
+
+<section class="search-filters">
+    <form method="get" action="{{ url_for('teams') }}">
+        <input type="text" name="search" placeholder="Search teams..." value="{{ request.args.get('search', '') }}">
+        <button type="submit" class="cta-button">Search</button>
+    </form>
+</section>
+
+<section class="teams-list">
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Team</th>
+                <th>City</th>
+                <th>State</th>
+                <th>Abbreviation</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for team in teams %}
+            <tr>
+                <td>
+                    <a href="{{ url_for('team_detail', team_id=team.team_id) }}">
+                        {{ team.nickname }}
+                    </a>
+                </td>
+                <td>{{ team.city }}</td>
+                <td>{{ team.state }}</td>
+                <td>{{ team.abbreviation }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+{% endblock %}

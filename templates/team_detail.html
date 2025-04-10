@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+
+{% block title %}{{ team.team_city }} {{ team.team_name }} - NBA Explorer{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <h1>{{ team.team_city }} {{ team.team_name }}</h1>
+    <p>{{ team.team_conference }} Conference - {{ team.team_division }} Division</p>
+</section>
+
+<section class="team-details">
+    <div class="card">
+        <h2>Season Stats</h2>
+        <table class="data-table">
+            <tr>
+                <th>Record</th>
+                <td>{{ team.w }}-{{ team.l }} ({{ "%.3f"|format(team.pct) }})</td>
+            </tr>
+            <tr>
+                <th>Conference Rank</th>
+                <td>{{ team.conf_rank }}</td>
+            </tr>
+            <tr>
+                <th>Division Rank</th>
+                <td>{{ team.div_rank }}</td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="card">
+        <h2>Team Statistics</h2>
+        <table class="data-table">
+            <tr>
+                <th>Points Per Game</th>
+                <td>{{ "%.1f"|format(team.pts_pg) }} (Rank: {{ team.pts_rank }})</td>
+            </tr>
+            <tr>
+                <th>Rebounds Per Game</th>
+                <td>{{ "%.1f"|format(team.reb_pg) }} (Rank: {{ team.reb_rank }})</td>
+            </tr>
+            <tr>
+                <th>Assists Per Game</th>
+                <td>{{ "%.1f"|format(team.ast_pg) }} (Rank: {{ team.ast_rank }})</td>
+            </tr>
+            <tr>
+                <th>Opponent Points Per Game</th>
+                <td>{{ "%.1f"|format(team.opp_pts_pg) }} (Rank: {{ team.opp_pts_rank }})</td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="card">
+        <h2>History</h2>
+        <table class="data-table">
+            <tr>
+                <th>First Season</th>
+                <td>{{ team.min_year }}</td>
+            </tr>
+            <tr>
+                <th>Years Active</th>
+                <td>{{ team.max_year - team.min_year + 1 }}</td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="actions">
+        <a href="{{ url_for('teams') }}" class="cta-button">Back to Teams</a>
+    </div>
+</section>
+
+<section class="related-data">
+    <h2>Recent Games</h2>
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Matchup</th>
+                <th>Result</th>
+                <th>Score</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for game in recent_games %}
+            <tr>
+                <td>{{ game.game_date.strftime('%Y-%m-%d') }}</td>
+                <td>
+                    <a href="{{ url_for('game_detail', game_id=game.game_id) }}">
+                        {{ game.matchup_home if game.team_id_home == team.team_id else game.matchup_away }}
+                    </a>
+                </td>
+                <td>{{ game.wl_home if game.team_id_home == team.team_id else game.wl_away }}</td>
+                <td>{{ game.pts_home }}-{{ game.pts_away }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+
+<section class="related-data">
+    <h2>Current Roster</h2>
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Player</th>
+                <th>Position</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for player in roster %}
+            <tr>
+                <td>
+                    <a href="{{ url_for('player_detail', player_id=player.id) }}">
+                        {{ player.full_name }}
+                    </a>
+                </td>
+                <td>{{ player.position }}</td>
+                <td>{{ "Active" if player.is_active else "Inactive" }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+{% endblock %}

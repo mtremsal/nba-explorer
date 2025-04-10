@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}NBA Explorer - Home{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <h1>Welcome to NBA Explorer</h1>
+    <p>Explore comprehensive NBA statistics and information</p>
+</section>
+
+<section class="quick-links">
+    <div class="card-container">
+        <div class="card">
+            <h2>Teams</h2>
+            <p>Browse all NBA teams, their stats, and history</p>
+            <a href="{{ url_for('teams') }}" class="cta-button">View Teams</a>
+        </div>
+        
+        <div class="card">
+            <h2>Players</h2>
+            <p>Discover player profiles and statistics</p>
+            <a href="{{ url_for('players') }}" class="cta-button">View Players</a>
+        </div>
+        
+        <div class="card">
+            <h2>Games</h2>
+            <p>Access detailed game information and results</p>
+            <a href="{{ url_for('games') }}" class="cta-button">View Games</a>
+        </div>
+    </div>
+</section>
+{% endblock %}
